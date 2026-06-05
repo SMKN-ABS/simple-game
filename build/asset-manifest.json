@@ -1,0 +1,29 @@
+{
+  "files": {
+    "main.css": "/react-starter/static/css/main.fa641401.chunk.css",
+    "main.js": "/react-starter/static/js/main.f8d50501.chunk.js",
+    "main.js.map": "/react-starter/static/js/main.f8d50501.chunk.js.map",
+    "runtime-main.js": "/react-starter/static/js/runtime-main.842e15cb.js",
+    "runtime-main.js.map": "/react-starter/static/js/runtime-main.842e15cb.js.map",
+    "static/js/2.4e3c8072.chunk.js": "/react-starter/static/js/2.4e3c8072.chunk.js",
+    "static/js/2.4e3c8072.chunk.js.map": "/react-starter/static/js/2.4e3c8072.chunk.js.map",
+    "static/js/3.c7fd441e.chunk.js": "/react-starter/static/js/3.c7fd441e.chunk.js",
+    "static/js/3.c7fd441e.chunk.js.map": "/react-starter/static/js/3.c7fd441e.chunk.js.map",
+    "index.html": "/react-starter/index.html",
+    "static/css/main.fa641401.chunk.css.map": "/react-starter/static/css/main.fa641401.chunk.css.map",
+    "static/js/2.4e3c8072.chunk.js.LICENSE.txt": "/react-starter/static/js/2.4e3c8072.chunk.js.LICENSE.txt",
+    "static/media/bullet.acded56d.png": "/react-starter/static/media/bullet.acded56d.png",
+    "static/media/cloud.bb03ef2e.png": "/react-starter/static/media/cloud.bb03ef2e.png",
+    "static/media/double.bc6f857c.png": "/react-starter/static/media/double.bc6f857c.png",
+    "static/media/App.scss": "/react-starter/static/media/red-mountains.d413b7b5.png",
+    "static/media/flightFiring.9fc4ec80.png": "/react-starter/static/media/flightFiring.9fc4ec80.png",
+    "static/media/score-icon.4c43fd53.png": "/react-starter/static/media/score-icon.4c43fd53.png",
+    "static/media/ship.9c395afa.png": "/react-starter/static/media/ship.9c395afa.png"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.842e15cb.js",
+    "static/js/2.4e3c8072.chunk.js",
+    "static/css/main.fa641401.chunk.css",
+    "static/js/main.f8d50501.chunk.js"
+  ]
+}

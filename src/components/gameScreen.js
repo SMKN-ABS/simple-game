@@ -14,18 +14,20 @@ const GameMode = {
 };
 
 const GameScreen = (context) => {
+	const { actions, state } = context;
+
 	useEffect(Ticker.start, []);
 
 	return (
 		<div
 			role="gameScreen"
 			className="game-screen"
-			style={ style(context) }
+			style={ style({ state }) }
 			onMouseMove={ (event) => {
-				context.actions.updateMousePosition(event);
-				context.actions.updateFlightPosition();
+				actions.updateMousePosition(event);
+				actions.updateFlightPosition();
 			} }
-			onClick={ () => context.actions
+			onClick={ () => actions
 				.generatePlayerBullets({ team: 'player' }) }
 		>
 			{GameMode[getMode(context)](context)}

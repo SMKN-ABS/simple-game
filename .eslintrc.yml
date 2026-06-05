@@ -263,14 +263,14 @@ rules:
     - error
     - namedComponents: arrow-function
       unnamedComponents: arrow-function
-  react/destructuring-assignment: ["error", "always"]
+  react/destructuring-assignment: [error, always, {destructureInSignature: always}]
   react/no-danger: error
   react/no-children-prop: error
   react/no-deprecated: error
   react/no-set-state: error
   react/no-this-in-sfc: error
   react/no-unescaped-entities: error
-  react/no-unknown-property: error
+  react/no-unknown-property: [error, { ignore: [args, attach, castShadow, color, dispose, geometry, intensity, map, material, object, position, receiveShadow, ref, rotation, scale, transparent, key, speed, opacity, segments, width, ref] }]
   react/no-unstable-nested-components: error
   react/prop-types: ['error', {"skipUndeclared": true}]
   react/prefer-stateless-function: error

@@ -16,23 +16,26 @@ import * as HealthBar from './healthBar';
 import * as Score from './score';
 import * as AudioControl from './audioControl';
 import * as PlayPause from './playPause';
+import * as BackgroundMesh from './backgroundMesh';
 
 test('Base', async () => {
 	const context = { context: Symbol('context') };
 	const useThree = {
 		mouse: Symbol('mouse'),
-		viewport: Symbol('viewport'),
+		viewport: { width: 10, height: 10 },
 	};
 	const { mouse, viewport } = useThree;
 	const enrichedContext = { ...context, mouse, viewport };
 	const orbitControlsScale = rndBetween();
-	const childCount = 16;
+	const backgroundScale = rndBetween();
+	const childCount = 17;
 	const two = 2;
 	const components = [
 		[Targets, rndBetween()],
 		[Flight, rndBetween()],
 		[Bullets, rndBetween()],
 		[Clouds, rndBetween()],
+		[BackgroundMesh, backgroundScale, {}],
 		[Plane, rndBetween()],
 		[Bgm, rndBetween()],
 		[HealthBar, rndBetween()],
@@ -43,6 +46,8 @@ test('Base', async () => {
 		[ContactShadows, rndBetween(), {}],
 	];
 
+	jest.spyOn(BackgroundMesh, 'default')
+		.mockReturnValue(<mesh scale={ backgroundScale }/>);
 	jest.spyOn(ReactFiber, 'useThree').mockReturnValue(useThree);
 	jest.spyOn(ReactDrei, 'useHelper').mockReturnValue();
 	jest.spyOn(ReactDrei.OrbitControls, 'render')
