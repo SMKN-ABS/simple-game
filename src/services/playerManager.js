@@ -4,6 +4,7 @@ import * as helper from './helperService';
 import { rndBetween, rndString } from '@laufire/utils/random';
 import * as helperService from '../services/helperService';
 import { adjustTime } from './ticker/timeService';
+import targetMovement from './targetMovement';
 
 const hundred = 100;
 
@@ -72,6 +73,22 @@ const PlayerManager = {
 			data: PlayerManager.configureObjects(item),
 		})),
 
+	computeTargetPosition: (target) => {
+		const computed = targetMovement.compute(target);
+		const wrapped = PositionService.wrapPosition({
+			...computed,
+			width: target.width || 0,
+			height: target.height || 0,
+		});
+
+		return {
+			...target,
+			x: wrapped.x,
+			y: wrapped.y,
+			movement: computed.movement || target.movement,
+		};
+	},
+
 	generateObjects: (context) => {
 		const { data: gameObject } = context;
 
@@ -82,6 +99,16 @@ const PlayerManager = {
 			}),
 		];
 	},
+
+	moveTargets: ({ state: { targets }}) =>
+		targets
+			.map(PlayerManager.computeTargetPosition)
+			.filter((target) => !PositionService
+				.isOutOfBounds({
+					...target,
+					width: target.width || 0,
+					height: target.height || 0,
+				})),
 
 	removeHitBullets: ({ state: { bullets }}) =>
 		bullets.filter((data) => data.isHit !== true),

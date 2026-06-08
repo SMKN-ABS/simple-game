@@ -1,3 +1,6 @@
+/* eslint-disable multiline-ternary */
+/* eslint-disable complexity */
+/* eslint-disable max-lines-per-function */
 /* eslint-disable no-shadow */
 import config from '../../core/config';
 import { keys } from '@laufire/utils/collection';
@@ -8,10 +11,15 @@ import { truthy } from '@laufire/utils/predicates';
 
 const { maxTargets } = config;
 const targetTypeKeys = keys(config.targets);
+const movementTypeKeys = keys(config.movementTypes);
 const sixtyFive = 65;
 const threeHundredFifty = 350;
 
 const targetManager = {
+
+	getMovementType: () => rndValue(movementTypeKeys),
+
+	getMovementConfig: (type) => config.movementTypes[type],
 
 	getTargets: ({ x, y, type } = {}) => {
 		const typeConfig = config.targets[type || rndValue(targetTypeKeys)];
@@ -20,6 +28,8 @@ const targetManager = {
 			height: typeConfig.height * variance,
 			width: typeConfig.width * variance,
 		};
+		const movementType = targetManager.getMovementType();
+		const movementConfig = targetManager.getMovementConfig(movementType);
 
 		return {
 			id: getId(config),
@@ -28,6 +38,13 @@ const targetManager = {
 			color: rndBetween(sixtyFive, threeHundredFifty),
 			...typeConfig,
 			...size,
+			movement: {
+				type: movementType,
+				...movementConfig,
+				initialX: x !== undefined ? x : positionService
+					.getRandomValue(size.width),
+				initialY: y !== undefined ? y : 0,
+			},
 		};
 	},
 

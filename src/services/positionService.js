@@ -1,3 +1,10 @@
+/* eslint-disable object-shorthand */
+/* eslint-disable no-unused-vars */
+/* eslint-disable no-trailing-spaces */
+/* eslint-disable indent */
+/* eslint-disable keyword-spacing */
+/* eslint-disable id-match */
+/* eslint-disable complexity */
 import { rndBetween } from '@laufire/utils/random';
 
 const hundred = 100;
@@ -5,7 +12,33 @@ const two = 2;
 
 const PositionService = {
 
-	getBulletPosition: ({ state: { flight: { x, width }},
+	isOutOfBounds: ({ x, y, width, height }) => {
+		const halfWidth = width / two;
+		const halfHeight = height / two;
+
+		return x - halfWidth < 0 || x + halfWidth > hundred
+			|| y - halfHeight < 0 || y + halfHeight > hundred;
+	},
+
+	wrapPosition: ({ x, y, width, height }) => {
+		const halfWidth = width / two;
+		const halfHeight = height / two;
+		let wrappedX = x;
+		let wrappedY = y;
+
+		if (x - halfWidth < 0)
+wrappedX = x + hundred;
+		if (x + halfWidth > hundred)
+wrappedX = x - hundred;
+		if (y - halfHeight < 0)
+wrappedY = y + hundred;
+		if (y + halfHeight > hundred)
+wrappedY = y - hundred;
+
+		return { x: wrappedX, y: wrappedY };
+	},
+
+		getBulletPosition: ({ state: { flight: { x, width }},
 		config: { quad }}) => {
 		const flightQuarter = width / quad;
 

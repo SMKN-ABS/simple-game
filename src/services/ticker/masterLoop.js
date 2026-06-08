@@ -9,6 +9,7 @@ const masterLoop = [
 	'updateObjects',
 	'updatePowers',
 	'resetObjects',
+	'moveTargets',
 	'moveBullets',
 	'processBullets',
 	'clearHitBullets',

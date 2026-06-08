@@ -151,6 +151,30 @@ const config = {
 			},
 		},
 	},
+	movementTypes: {
+		static: {
+			speed: 0.2,
+			prob: 0.3,
+		},
+		linear: {
+			speed: 0.3,
+			direction: 1,
+			prob: 0.3,
+		},
+		sine: {
+			speed: 0.2,
+			amplitude: 15,
+			frequency: 0.1,
+			prob: 0.2,
+		},
+		zigzag: {
+			speed: 0.25,
+			direction: 1,
+			amplitude: 15,
+			prob: 0.2,
+		},
+	},
+	defaultMovementType: 'static',
 };
 
 export default config;

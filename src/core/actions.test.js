@@ -13,6 +13,7 @@ describe('actions', () => {
 		resetObjects,
 		generatePlayerBullets,
 		moveBullets,
+		moveTargets,
 		updateFlightPosition,
 		processBullets,
 		clearHitBullets,
@@ -215,6 +216,17 @@ describe('actions', () => {
 
 		expect(result).toEqual(expected);
 		expect(playerManager.moveBullets).toHaveBeenCalledWith(context);
+	});
+
+	test('Move Targets updates target positions', () => {
+		jest.spyOn(playerManager, 'moveTargets').mockReturnValue(returnValue);
+
+		const expected = { targets: returnValue };
+
+		const result = moveTargets(context);
+
+		expect(result).toEqual(expected);
+		expect(playerManager.moveTargets).toHaveBeenCalledWith(context);
 	});
 
 	test('process Bullets', () => {

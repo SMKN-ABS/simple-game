@@ -55,6 +55,10 @@ const moveBullets = (context) => ({
 	bullets: PlayerManager.moveBullets(context),
 });
 
+const moveTargets = (context) => ({
+	targets: PlayerManager.moveTargets(context),
+});
+
 const processBullets = (context) => PlayerManager.processHits(context);
 
 const processPowers = (context) =>
@@ -107,6 +111,7 @@ const actions = {
 	resetObjects,
 	generatePlayerBullets,
 	moveBullets,
+	moveTargets,
 	updateFlightPosition,
 	processBullets,
 	clearHitBullets,
