@@ -1,3 +1,103 @@
+# Plan: Combo Bonus
+
+## Feature
+Reward the player for destroying multiple targets in rapid succession. A multiplier increases with each consecutive kill, resetting if the player waits too long between hits.
+
+## Status
+- [ ] Not started
+- [ ] In progress
+- [ ] Complete
+
+## Architecture Alignment
+Uses existing layers without adding new actions or services:
+- **Core**: `seed.js` (new state fields), `config.js` (new tuning parameters)
+- **Services**: `playerManager.js` — expands existing `updateScore` to count kills and manage combo timer
+- **UI/Renderers**: `score.js` (2D), `3dMode/score.js` (3D), and `gameOverScreen.js` for display
+
+## Approach
+
+### 1. State Shape
+Add three fields to `src/core/seed.js` alongside `score` and `health`:
+
+```js
+comboCount: 0,
+comboTimer: 0,
+maxCombo: 0,
+```
+
+### 2. Scoring Logic
+Modify `updateScore` in `src/services/playerManager.js`:
+1. Count freshly destroyed targets (`health === 0`).
+2. If kills > 0: increment `comboCount`, set `comboTimer = now + comboTimeout`.
+3. If kills === 0 and `now > comboTimer`: reset `comboCount` to 0.
+4. Apply multiplier: `score += kills × min(comboCount, comboMultiplierMax)`.
+5. Update `maxCombo` if streak exceeded previous best.
+
+**Why here?** `updateScore` runs in the one-frame window after `processBullets` marks targets dead but before `removeTargets` removes them, making it the only place that can count kills reliably.
+
+### 3. Config Parameters
+Add to `src/core/config.js`:
+
+```js
+comboTimeout: 3000,
+comboMultiplierMax: 5,
+```
+
+### 4. Visual Feedback
+
+| Mode | UI Element | Behavior |
+|------|------------|----------|
+| **2D** | `score.js` combo badge | Show "🔥 N×" when `comboCount > 1`. Optional thin timer bar below badge. |
+| **3D** | `3dMode/score.js` | Add a second `<Text>` node next to score, mirrors 2D badge. |
+| **Game Over** | `gameOverScreen.js` | Display `maxCombo: N` alongside final score for a secondary feel-good metric. |
+
+### 5. Edge Cases
+
+| Scenario | Decision |
+|----------|----------|
+| **Multi-kill same frame** | `comboCount += killCount`. Treats it as a rapid burst. |
+| **Exact timeout boundary** | Extend timer if kill is at or before `comboTimer`; ~50ms tolerance recommended. |
+| **Combo + doubleBullet stack?** | Independent. Double bullet = more kills = easier to maintain combo. Combo = higher multiplier. |
+| **Damage reset combo?** | No. Keep the feature feel-good rather than punitive. |
+| **Enemy collision kills player?** | Only player-bullet kills count toward combo. |
+
+## Files to Modify
+
+| # | File | Change |
+|---|------|--------|
+| 1 | `src/core/seed.js` | Add `comboCount`, `comboTimer`, `maxCombo` to default state |
+| 2 | `src/core/config.js` | Add `comboTimeout: 3000` and `comboMultiplierMax: 5` |
+| 3 | `src/services/playerManager.js` | Expand `updateScore` to handle combo logic, return combo state |
+| 4 | `src/components/score.js` | Render combo badge when `comboCount > 1` |
+| 5 | `src/components/3dMode/score.js` | Add 3D combo text display |
+| 6 | `src/components/gameOverScreen.js` | Show `maxCombo` on game over |
+
+## Rollout Plan
+
+### Phase 1: Core State & Logic
+- [ ] Update `seed.js` and `config.js`
+- [ ] Modify `updateScore` in `playerManager.js`
+- [ ] Verify combo increments, score multiples, and timer resets correctly
+
+### Phase 2: UI in 2D Mode
+- [ ] Add combo badge to `score.js`
+- [ ] Style badge with color/icon
+- [ ] Optional: add a shrinking timer bar under the badge
+
+### Phase 3: UI in 3D Mode
+- [ ] Add combo text node to `3dMode/score.js`
+- [ ] Verify positioning and readability in 3D scene
+
+### Phase 4: Game Over Screen & Polish
+- [ ] Display `maxCombo` in `gameOverScreen.js`
+- [ ] Regression test across both 2D and 3D modes
+
+## Effort
+- **Estimated:** 1–2 days
+- **Category:** 🟢 Low (reuses existing state, actions, and components)
+
+---
+
 # Plan: Moving Targets
 
 ## Feature
