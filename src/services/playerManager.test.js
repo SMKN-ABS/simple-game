@@ -1,3 +1,6 @@
+/* eslint-disable no-mixed-operators */
+/* eslint-disable max-len */
+/* eslint-disable no-magic-numbers */
 /* eslint-disable max-lines */
 import PositionService from './positionService';
 import PlayerManager from './playerManager';
@@ -436,22 +439,157 @@ describe('PlayerManager', () => {
 		expect(result).toMatchObject(expectation);
 	});
 
-	test('updateScore', () => {
-		helper.retry(() => {
-			const rndRangeNum = secure(range(0, random.rndBetween(1, ten)));
-			const targets = secure(rndRangeNum
-				.map((data) => ({ id: data, health:
-				rndBetween(0, four) })));
-			const score = rndBetween(0, ten);
+	describe('updateScore', () => {
+		const mockNow = 1000000;
+		const comboTimeout = 3000;
+		const comboMultiplierMax = 5;
+		const testConfig = { comboTimeout, comboMultiplierMax };
 
-			const damagedTargets = targets.filter((target) =>
-				target.health === 0);
+		beforeEach(() => {
+			jest.spyOn(Date, 'now').mockReturnValue(mockNow);
+		});
 
-			const expectation = damagedTargets.length + score;
+		afterEach(() => {
+			Date.now.mockRestore();
+		});
 
-			const result = updateScore({ state: { targets, score }});
+		test('no kills and combo timer NOT expired - retains combo', () => {
+			const targets = [{ id: 1, health: 10 }, { id: 2, health: 5 }];
+			const score = 50;
+			const comboCount = 3;
+			const comboTimer = mockNow + 1000;
+			const maxCombo = 5;
 
-			expect(result).toEqual(expectation);
+			const result = updateScore({
+				state: { targets, score, comboCount, comboTimer, maxCombo },
+				config: testConfig,
+			});
+
+			expect(result).toEqual({
+				score: 50,
+				comboCount: 3,
+				comboTimer: comboTimer,
+				maxCombo: 5,
+			});
+		});
+
+		test('no kills and combo timer EXPIRED - resets combo to 0', () => {
+			const targets = [{ id: 1, health: 10 }];
+			const score = 50;
+			const comboCount = 3;
+			const comboTimer = mockNow - 1;
+			const maxCombo = 5;
+
+			const result = updateScore({
+				state: { targets, score, comboCount, comboTimer, maxCombo },
+				config: testConfig,
+			});
+
+			expect(result).toEqual({
+				score: 50,
+				comboCount: 0,
+				comboTimer: comboTimer,
+				maxCombo: 5,
+			});
+		});
+
+		test('single kill - increases score with multiplier and extends combo', () => {
+			const targets = [{ id: 1, health: 0 }, { id: 2, health: 5 }];
+			const score = 10;
+			const comboCount = 2;
+			const comboTimer = mockNow + 1000;
+			const maxCombo = 2;
+
+			const result = updateScore({
+				state: { targets, score, comboCount, comboTimer, maxCombo },
+				config: testConfig,
+			});
+
+			expect(result).toEqual({
+				score: 10 + 1 * 3,
+				comboCount: 3,
+				comboTimer: mockNow + comboTimeout,
+				maxCombo: 3,
+			});
+		});
+
+		test('multiple kills - multiplier applied to all kills', () => {
+			const targets = [
+				{ id: 1, health: 0 },
+				{ id: 2, health: 0 },
+				{ id: 3, health: 5 },
+			];
+			const score = 20;
+			const comboCount = 1;
+			const comboTimer = mockNow + 1000;
+			const maxCombo = 1;
+
+			const result = updateScore({
+				state: { targets, score, comboCount, comboTimer, maxCombo },
+				config: testConfig,
+			});
+
+			expect(result).toEqual({
+				score: 20 + 2 * 3,
+				comboCount: 3,
+				comboTimer: mockNow + comboTimeout,
+				maxCombo: 3,
+			});
+		});
+
+		test('combo multiplier capped at comboMultiplierMax', () => {
+			const targets = [{ id: 1, health: 0 }];
+			const score = 100;
+			const comboCount = 5;
+			const comboTimer = mockNow + 1000;
+			const maxCombo = 5;
+
+			const result = updateScore({
+				state: { targets, score, comboCount, comboTimer, maxCombo },
+				config: testConfig,
+			});
+
+			expect(result).toEqual({
+				score: 100 + 1 * 5,
+				comboCount: 6,
+				comboTimer: mockNow + comboTimeout,
+				maxCombo: 6,
+			});
+		});
+
+		test('kills with no prior combo start from multiplier 1', () => {
+			const targets = [{ id: 1, health: 0 }];
+			const score = 0;
+			const comboCount = 0;
+			const comboTimer = mockNow + 1000;
+			const maxCombo = 0;
+
+			const result = updateScore({
+				state: { targets, score, comboCount, comboTimer, maxCombo },
+				config: testConfig,
+			});
+
+			expect(result).toEqual({
+				score: 1,
+				comboCount: 1,
+				comboTimer: mockNow + comboTimeout,
+				maxCombo: 1,
+			});
+		});
+
+		test('maxCombo is preserved when new comboCount is lower', () => {
+			const targets = [{ id: 1, health: 0 }];
+			const score = 0;
+			const comboCount = 2;
+			const comboTimer = mockNow + 1000;
+			const maxCombo = 10;
+
+			const result = updateScore({
+				state: { targets, score, comboCount, comboTimer, maxCombo },
+				config: testConfig,
+			});
+
+			expect(result.maxCombo).toEqual(10);
 		});
 	});
 
