@@ -270,13 +270,11 @@ describe('actions', () => {
 		jest.spyOn(playerManager, 'updateScore')
 			.mockReturnValue(returnValue);
 
-		const expected = { score: returnValue };
-
 		const result = updateScore(context);
 
 		expect(playerManager.updateScore).toHaveBeenCalledWith(context);
 
-		expect(result).toMatchObject(expected);
+		expect(result).toEqual(returnValue);
 	});
 
 	test('removeTargets test', () => {

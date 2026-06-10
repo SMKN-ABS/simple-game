@@ -69,6 +69,16 @@ wrappedY = y - hundred;
 		},
 	}),
 
+		bouncePosition: ({ x, y, width, height }) => {
+		const halfWidth = (width || 0) / two;
+		const halfHeight = (height || 0) / two;
+
+		return {
+			x: Math.min(hundred - halfWidth, Math.max(halfWidth, x)),
+			y: Math.min(hundred - halfHeight, Math.max(halfHeight, y)),
+		};
+	},
+
 	threeDProject: ({ config, data, viewport: { width, height }}) => ({
 		...data,
 		x: (data.x * width / hundred) - (width / two),

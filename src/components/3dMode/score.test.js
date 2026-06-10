@@ -15,12 +15,19 @@ test('Score', async () => {
 	};
 	const getDegreeToRad = rndBetween();
 	const degree = -90;
-	const childCount = 1;
+	const childCount = 2;
 	const meshProps = {
 		rotation: [getDegreeToRad, 0, 0],
 		position: [getProject.x, 1, getProject.z],
 	};
 	const textProps = { text: `Score: ${ state.score }` };
+	const comboTextProps = {
+		text: '',
+		fontSize: 0.15,
+		color: '#ff6600',
+		anchorX: 'right',
+		position: [0, -0.3, 0],
+	};
 
 	jest.spyOn(PositionService, 'threeDProject').mockReturnValue(getProject);
 	jest.spyOn(helperService, 'degreeToRad').mockReturnValue(getDegreeToRad);
@@ -31,6 +38,7 @@ test('Score', async () => {
 	expect(mesh.allChildren.length).toEqual(childCount);
 	expect(mesh.props).toMatchObject(meshProps);
 	expect(mesh.allChildren[0].props).toMatchObject(textProps);
+	expect(mesh.allChildren[1].props).toMatchObject(comboTextProps);
 	expect(PositionService.threeDProject).toHaveBeenCalledWith({ ...context,
 		data: config.scorePosition });
 	expect(helperService.degreeToRad).toHaveBeenCalledWith(degree);
