@@ -77,9 +77,7 @@ const generatePowers = (context) => ({
 		...context, data: 'powers',
 	}),
 });
-const updateScore = (context) => ({
-	score: PlayerManager.updateScore(context),
-});
+const updateScore = (context) => PlayerManager.updateScore(context);
 
 const removeTargets = (context) => ({
 	targets: PlayerManager.removeTargets(context),

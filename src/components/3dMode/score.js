@@ -13,16 +13,25 @@ const meshProps = (context) => {
 	};
 };
 
-const textProps = ({ state }) => ({
+const scoreTextProps = ({ state }) => ({
 	text: `Score: ${ state.score }`,
 	fontSize: 0.2,
 	color: 'black',
 	anchorX: 'right',
 });
 
+const comboTextProps = ({ state }) => ({
+	text: state.comboCount > 1 ? `🔥 ${ state.comboCount }×` : '',
+	fontSize: 0.15,
+	color: '#ff6600',
+	anchorX: 'right',
+	position: [0, -0.3, 0],
+});
+
 const Score = (context) =>
 	<group { ...meshProps(context) }>
-		<Text { ...textProps(context) }/>
+		<Text { ...scoreTextProps(context) }/>
+		<Text { ...comboTextProps(context) }/>
 	</group>;
 
 export default Score;

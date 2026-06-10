@@ -94,6 +94,8 @@ const config = {
 	bulletYAxis: 90,
 	moveBulletPercentage: 5,
 	bgnScreenYIncre: 1,
+	comboTimeout: 3000,
+	comboMultiplierMax: 5,
 	maxTargets: 5,
 	objects: {
 		cloud: {

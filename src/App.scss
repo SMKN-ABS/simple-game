@@ -83,6 +83,20 @@
 			font-weight: 600;
 			align-self: center;
 		}
+
+		.combo-badge{
+			font-size: 4vmin;
+			font-weight: 700;
+			align-self: center;
+			color: #ff6600;
+			text-shadow: 0 0 5px #ffaa00, 0 0 10px #ff4400;
+			animation: combo-pulse 0.5s ease-in-out infinite alternate;
+		}
+
+		@keyframes combo-pulse {
+			from { transform: scale(1); }
+			to { transform: scale(1.1); }
+		}
 	}
 
 .game-over-screen{
@@ -108,6 +122,13 @@
 	color: #000000;
 	font-weight: 70;
 	padding: 3%;
+}
+
+.game-max-combo{
+	font-size: calc(12px + 1vw);
+	color: #333333;
+	font-weight: 600;
+	padding: 1%;
 }
 
 .restart-button {

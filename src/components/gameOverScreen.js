@@ -9,6 +9,8 @@ const GameOverScreen = () =>
 		{ Restart() }
 		<div className="game-score" role="score">
 			SCORE: {context.state.score}</div>
+		<div className="game-max-combo" role="max-combo">
+			MAX COMBO: {context.state.maxCombo}</div>
 	</div>;
 
 export default GameOverScreen;

@@ -1,3 +1,7 @@
+/* eslint-disable max-len */
+/* eslint-disable no-mixed-operators */
+/* eslint-disable complexity */
+/* eslint-disable max-lines-per-function */
 import PositionService from './positionService';
 import { find, values } from '@laufire/utils/collection';
 import * as helper from './helperService';
@@ -235,8 +239,35 @@ const PlayerManager = {
 	calDamage: (target, bullets) =>
 		Math.max(target.health - bullets.reduce((a, c) => a + c.damage, 0), 0),
 
-	updateScore: ({ state: { targets, score }}) =>
-		targets.reduce((a, target) => (target.health === 0 ? a + 1 : a), score),
+	updateScore: ({
+		state: { targets, score, comboCount, comboTimer, maxCombo },
+		config,
+	}) => {
+		const now = Date.now();
+		const kills = targets.reduce((count, target) => (target.health === 0 ? count + 1 : count),
+			0);
+		const newComboCount = kills > 0
+			? comboCount + kills
+			: now > comboTimer
+				? 0
+				: comboCount;
+		const newComboTimer = kills > 0
+			? now + config.comboTimeout
+			: comboTimer;
+		const multiplier = kills > 0
+			? Math.min(newComboCount, config.comboMultiplierMax)
+			: 1;
+		const newScore = kills > 0
+			? score + kills * multiplier
+			: score;
+
+		return {
+			score: newScore,
+			comboCount: newComboCount,
+			comboTimer: newComboTimer,
+			maxCombo: Math.max(maxCombo, newComboCount),
+		};
+	},
 
 	removeTargets: ({ state: { targets }}) =>
 		targets.filter((target) => target.health !== 0),
