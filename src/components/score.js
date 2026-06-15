@@ -10,7 +10,7 @@ const Score = (context) => {
 			{score} </span>
 		{ comboCount > 1 && <span role="combo" className="combo-badge">
 			🔥 { comboCount }×
-			</span> }
+		</span> }
 	</div>;
 };
 

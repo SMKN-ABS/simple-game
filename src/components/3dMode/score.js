@@ -1,3 +1,4 @@
+/* eslint-disable no-magic-numbers */
 import { React } from 'react';
 import { Text } from '@react-three/drei';
 import { degreeToRad } from '../../services/helperService';
