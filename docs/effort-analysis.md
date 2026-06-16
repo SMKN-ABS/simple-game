@@ -22,6 +22,7 @@ A breakdown of all 20 features from `docs/FEATURES.md` ranked by implementation 
 | 2 | **Moving Targets** | Gameplay | ✅ Complete | Static, linear, sine, and zigzag patterns wired into target spawn & tick loop. | Targets fly around instead of staying still, making them harder to hit. |
 | 4 | **Power-ups** | Gameplay | ✅ Partial | `doubleBullet` already drops and works. Extra health / shield could be added easily. | Collectible items that give you temporary boosts like double bullets or extra health. |
 | 6 | **Extra Lives** | Gameplay | ✅ Partial | Lives are not a separate concept yet; when health hits zero the game ends. Adding a `lives` counter would be low effort. | Gives you multiple chances before the game is truly over, instead of ending on one mistake. |
+| 14 | **Combo Bonus** | Gameplay | ✅ Complete | `combo` / `comboTimer` counter exists in `seed.js`. Increments on hit, resets after timeout. Score multiplier wired into `PlayerManager.updateScore()` and rendered in both 2D and 3D score components. | Earn extra points for hitting several targets in a row without missing. |
 
 ---
 
@@ -31,7 +32,6 @@ These features touch only one or two layers, reuse existing state/actions, and n
 
 | # | Feature | Category | Why It's Easy | Key Files | What It Means (Simple) |
 |---|---------|----------|---------------|-----------|------------------------|
-| 14 | **Combo Bonus** | Gameplay | Add a `combo` / `comboTimer` counter to `seed.js`. Increment on hit, reset after a timeout. Multiply score in `PlayerManager.updateScore()`. | `seed.js`, `PlayerManager.js`, `score.js` | Earn extra points for hitting several targets in a row without missing. |
 | 3 | **Gets Harder Over Time** | Gameplay | Scale `maxTargets`, `spawn` probability, and `movementTypes[].speed` by `score` or elapsed time in `targetManager.addTargets()`. Pure config math. | `targetManager/index.js`, `config.js` | The longer you play, the faster enemies appear and move. |
 | 1 | **Hold to Shoot** | Gameplay | Swap `onClick` for `onMouseDown` / `onMouseUp` + `setInterval` in `gameScreen.js`. Add `isShooting` flag to state. | `gameScreen.js`, `actions.js` | Keep the mouse button pressed down to fire continuously instead of clicking each time. |
 | 7 | **High Score List** | Gameplay | `localStorage` already stores `score`. Extend to an array, add sort/cap. New UI overlay only. | `gameService.js`, `gameOverScreen.js` | A leaderboard that remembers your best scores across sessions. |
@@ -75,7 +75,7 @@ Ranked by impact-per-effort. Build in this order.
 
 ### Quick Wins
 1. **Moving Targets** ⭐ — Already done; just tune probabilities.
-2. **Combo Bonus** — Very little code. Adds instant dopamine feedback.
+2. **Combo Bonus** ⭐ — Already done; just tune multiplier and timeout.
 3. **Gets Harder Over Time** — Pure config math. Keeps the game interesting.
 4. **Hold to Shoot** — Small UI change, big feel improvement.
 5. **Explosion Effects** — CSS / short sprite burst. Makes every hit satisfying.
